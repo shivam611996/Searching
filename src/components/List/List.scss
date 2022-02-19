@@ -1,0 +1,15 @@
+.list {
+  &-row {
+    display: flex;
+    border-bottom: 1px solid;
+    padding: 16px 0;
+    .avatar {
+      img {
+        width: 50px;
+      }
+    }
+    .details {
+      padding-left: 16px;
+    }
+  }
+}
