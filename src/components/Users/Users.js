@@ -9,7 +9,7 @@ function Users({ users }) {
         return (
           <div className="user">
             <div className="user-image">
-              <img src={avatar} alt="NA" />
+              <img src={avatar} alt={name} />
             </div>
             <div className="user-details">
               <div>

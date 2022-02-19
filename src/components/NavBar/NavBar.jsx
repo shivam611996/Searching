@@ -31,9 +31,9 @@ const tabItems = Object.freeze({
   LISTS: "Lists"
 });
 
-const { ALL, FILES, PEOPlE, CHATS, LISTS } = tabItems;
+export const { ALL, FILES, PEOPlE, CHATS, LISTS } = tabItems;
 
-const getTabPane = ({ tab, users, files, chats, lists }) => {
+const getTabPane = ({ tab, users, files, chats, lists, searchValue }) => {
   let list;
   switch (tab) {
     case ALL:
@@ -55,7 +55,7 @@ const getTabPane = ({ tab, users, files, chats, lists }) => {
       list = [];
   }
   if (list.length) {
-    return <List list={list} />;
+    return <List list={list} searchValue={searchValue} />;
   }
   return <span>No match found.</span>;
 };
@@ -68,7 +68,7 @@ const TABS = [
   { name: LISTS, Icon: ListIcon, visible: false }
 ];
 
-function NavBar({ users, files, chats, lists }) {
+function NavBar({ users, files, chats, lists, searchValue }) {
   const [activeTab, setActiveTab] = React.useState(ALL);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = React.useState(false);
   const [tabs, setTabs] = React.useState(TABS);
@@ -150,7 +150,7 @@ function NavBar({ users, files, chats, lists }) {
       <TabContent activeTab={activeTab}>
         {visibleTabs.map(({ name }) => (
           <TabPane tabId={name}>
-            {getTabPane({ tab: name, users, files })}
+            {getTabPane({ tab: name, users, files, chats, lists, searchValue })}
           </TabPane>
         ))}
       </TabContent>

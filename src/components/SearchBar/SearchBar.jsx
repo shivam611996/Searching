@@ -8,7 +8,7 @@ const Spinner = () => (
   <span className="spinner-border text-secondary" role="status"></span>
 );
 
-function SearchBar({ loading, handleUserSearch }) {
+function SearchBar({ loading, handleUserSearch, searchValue }) {
   return (
     <div className="search-bar-container">
       {loading ? <Spinner /> : <Search color="#6c757d" />}
@@ -17,6 +17,7 @@ function SearchBar({ loading, handleUserSearch }) {
         onChange={handleUserSearch}
         placeholder="Searching is easier"
         type="search"
+        value={searchValue}
       />
     </div>
   );

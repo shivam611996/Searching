@@ -4,12 +4,22 @@
     border-bottom: 1px solid;
     padding: 16px 0;
     .avatar {
+      position: relative;
       img {
         width: 50px;
+      }
+      .active-status {
+      position: absolute;
+      left: 16px;
+      top: 16px;
       }
     }
     .details {
       padding-left: 16px;
+      .highlight {
+      padding: 0;
+      background-color: yellow;
+      }
     }
   }
 }
