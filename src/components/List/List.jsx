@@ -1,4 +1,5 @@
 import React from "react";
+import { Dot } from "react-bootstrap-icons";
 
 import "./List.scss";
 
@@ -13,12 +14,19 @@ function List({ list }) {
             </div>
             <div className="details">
               <div>
-                <span> {name} </span>
+                <span>
+                  <b> {name} </b>
+                </span>
               </div>
               <div>
                 <span>
-                  {" "}
-                  {path} * {status}{" "}
+                  {path ? (
+                    <span>
+                      {path} <Dot size={16} /> {status}
+                    </span>
+                  ) : (
+                    status
+                  )}
                 </span>
               </div>
             </div>

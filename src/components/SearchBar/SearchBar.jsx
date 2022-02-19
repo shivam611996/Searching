@@ -1,20 +1,24 @@
 import React from "react";
 import { Input } from "reactstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { Search } from "react-bootstrap-icons";
 
-import "./SearchBar.css";
+import "./SearchBar.scss";
 
-function SearchBar({ handleUserSearch }) {
+const Spinner = () => (
+  <span className="spinner-border text-secondary" role="status"></span>
+);
+
+function SearchBar({ loading, handleUserSearch }) {
   return (
-    <>
-      <FontAwesomeIcon icon={faCoffee} />
+    <div className="search-bar-container">
+      {loading ? <Spinner /> : <Search color="#6c757d" />}
       <Input
+        autoFocus
         onChange={handleUserSearch}
         placeholder="Searching is easier"
         type="search"
       />
-    </>
+    </div>
   );
 }
 

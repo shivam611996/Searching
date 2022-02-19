@@ -1,0 +1,12 @@
+.search-bar-container {
+  display: flex;
+  svg {
+    height: 38px;
+    width: 24px;
+  }
+  input[type="search"] {
+    width: 100%;
+    border: none;
+    box-shadow: none;
+  }
+}

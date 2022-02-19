@@ -6,15 +6,22 @@ import {
   NavItem,
   TabContent,
   TabPane,
-  Row,
-  Col,
-  Card,
-  CardTitle,
-  CardText,
-  Button
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Badge
 } from "reactstrap";
-import "./NavBar.css";
+import {
+  Gear,
+  Paperclip,
+  Person,
+  Chat,
+  List as ListIcon
+} from "react-bootstrap-icons";
 import List from "../List/List";
+
+import "./NavBar.scss";
 
 const tabItems = Object.freeze({
   ALL: "All",
@@ -26,44 +33,125 @@ const tabItems = Object.freeze({
 
 const { ALL, FILES, PEOPlE, CHATS, LISTS } = tabItems;
 
-const getTabPane = ({ tab, users, files }) => {
+const getTabPane = ({ tab, users, files, chats, lists }) => {
+  let list;
   switch (tab) {
     case ALL:
-      return <List list={[...users, ...files]} />;
+      list = [...users, ...files];
+      break;
     case PEOPlE:
-      return <List list={users} />;
+      list = users;
+      break;
     case FILES:
-      return <List list={files} />;
+      list = files;
+      break;
+    case CHATS:
+      list = chats;
+      break;
+    case LISTS:
+      list = lists;
+      break;
     default:
-      return `No ${tab}`;
+      list = [];
   }
+  if (list.length) {
+    return <List list={list} />;
+  }
+  return <span>No match found.</span>;
 };
 
-function NavBar({ users, files }) {
+const TABS = [
+  { name: ALL, Icon: null, visible: true },
+  { name: FILES, Icon: Paperclip, visible: true },
+  { name: PEOPlE, Icon: Person, visible: true },
+  { name: CHATS, Icon: Chat, visible: false },
+  { name: LISTS, Icon: ListIcon, visible: false }
+];
+
+function NavBar({ users, files, chats, lists }) {
   const [activeTab, setActiveTab] = React.useState(ALL);
-  const tabs = [ALL, FILES, PEOPlE, CHATS, LISTS];
+  const [settingsDropdownOpen, setSettingsDropdownOpen] = React.useState(false);
+  const [tabs, setTabs] = React.useState(TABS);
+  const visibleTabs = tabs.filter(({ visible }) => visible);
 
   const handleTabClick = (tab) => () => {
     setActiveTab(tab);
   };
 
+  const toggleTabVisibility = (name) => () => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab) =>
+        tab.name === name ? { ...tab, visible: !tab.visible } : tab
+      )
+    );
+  };
+
+  const getCount = (tab) => {
+    switch (tab) {
+      case ALL:
+        return users.length + files.length + chats.length + lists.length;
+      case PEOPlE:
+        return users.length;
+      case FILES:
+        return files.length;
+      case CHATS:
+        return chats.length;
+      case LISTS:
+        return lists.length;
+      default:
+        return 0;
+    }
+  };
+
   return (
-    <div>
+    <div className="navbar-container">
       <Nav tabs>
-        {tabs.map((tab) => (
-          <NavItem>
+        {visibleTabs.map(({ name, Icon }) => (
+          <NavItem key={name}>
             <NavLink
-              className={classNames(activeTab === tab && "active")}
-              onClick={handleTabClick(tab)}
+              className={classNames(activeTab === name && "active")}
+              onClick={handleTabClick(name)}
             >
-              {tab}
+              {Icon && <Icon />} {name} <Badge>{getCount(name)}</Badge>
             </NavLink>
           </NavItem>
         ))}
+
+        <NavItem key="settings" className="settings">
+          <Dropdown isOpen={settingsDropdownOpen} nav toggle={() => {}}>
+            <DropdownToggle
+              nav
+              onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
+            >
+              <Gear />
+            </DropdownToggle>
+            <DropdownMenu>
+              {tabs.slice(1).map(({ name, Icon, visible }) => (
+                <DropdownItem key={name} onClick={toggleTabVisibility(name)}>
+                  <div className="dropdown-tab-item">
+                    <div>
+                      <Icon /> {name}{" "}
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        checked={visible}
+                      />
+                    </div>
+                  </div>
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </NavItem>
       </Nav>
       <TabContent activeTab={activeTab}>
-        {tabs.map((tab) => (
-          <TabPane tabId={tab}>{getTabPane({ tab, users, files })}</TabPane>
+        {visibleTabs.map(({ name }) => (
+          <TabPane tabId={name}>
+            {getTabPane({ tab: name, users, files })}
+          </TabPane>
         ))}
       </TabContent>
     </div>
