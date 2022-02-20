@@ -17,8 +17,7 @@ function App() {
   const [files, setFiles] = React.useState([]);
   const [chats, setChats] = React.useState([]);
   const [lists, setLists] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const searchResultsLength = users.length + files.length;
+  const [loading, setLoading] = React.useState(true);
 
   const getFilteredListByName = ({ list, value, category }) => {
     const filteredList = [];
@@ -72,9 +71,10 @@ function App() {
           loading={loading}
           handleUserSearch={handleUserSearch}
         />
-        {searchResultsLength > 0 && (
+        {searchValue && (
           <NavBar
             searchValue={searchValue}
+            loading={loading}
             users={users}
             files={files}
             chats={chats}

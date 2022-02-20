@@ -12,63 +12,13 @@ import {
   DropdownItem,
   Badge
 } from "reactstrap";
-import {
-  Gear,
-  Paperclip,
-  Person,
-  Chat,
-  List as ListIcon
-} from "react-bootstrap-icons";
-import List from "../List/List";
+import { Gear } from "react-bootstrap-icons";
+import TabPaneData from "../TabPaneData/TabPaneData";
+import { ALL, FILES, PEOPlE, CHATS, LISTS, TABS } from "../../constants/search";
 
 import "./NavBar.scss";
 
-const tabItems = Object.freeze({
-  ALL: "All",
-  FILES: "Files",
-  PEOPlE: "People",
-  CHATS: "Chats",
-  LISTS: "Lists"
-});
-
-export const { ALL, FILES, PEOPlE, CHATS, LISTS } = tabItems;
-
-const getTabPane = ({ tab, users, files, chats, lists, searchValue }) => {
-  let list;
-  switch (tab) {
-    case ALL:
-      list = [...users, ...files];
-      break;
-    case PEOPlE:
-      list = users;
-      break;
-    case FILES:
-      list = files;
-      break;
-    case CHATS:
-      list = chats;
-      break;
-    case LISTS:
-      list = lists;
-      break;
-    default:
-      list = [];
-  }
-  if (list.length) {
-    return <List list={list} searchValue={searchValue} />;
-  }
-  return <span>No match found.</span>;
-};
-
-const TABS = [
-  { name: ALL, Icon: null, visible: true },
-  { name: FILES, Icon: Paperclip, visible: true },
-  { name: PEOPlE, Icon: Person, visible: true },
-  { name: CHATS, Icon: Chat, visible: false },
-  { name: LISTS, Icon: ListIcon, visible: false }
-];
-
-function NavBar({ users, files, chats, lists, searchValue }) {
+function NavBar({ users, files, chats, lists, searchValue, loading }) {
   const [activeTab, setActiveTab] = React.useState(ALL);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = React.useState(false);
   const [tabs, setTabs] = React.useState(TABS);
@@ -116,41 +66,53 @@ function NavBar({ users, files, chats, lists, searchValue }) {
             </NavLink>
           </NavItem>
         ))}
-
-        <NavItem key="settings" className="settings">
-          <Dropdown isOpen={settingsDropdownOpen} nav toggle={() => {}}>
-            <DropdownToggle
-              nav
-              onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
-            >
-              <Gear />
-            </DropdownToggle>
-            <DropdownMenu>
-              {tabs.slice(1).map(({ name, Icon, visible }) => (
-                <DropdownItem key={name} onClick={toggleTabVisibility(name)}>
-                  <div className="dropdown-tab-item">
-                    <div>
-                      <Icon /> {name}{" "}
-                    </div>
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        checked={visible}
-                      />
-                    </div>
+        <Dropdown
+          key="settings"
+          className="settings"
+          isOpen={settingsDropdownOpen}
+          nav
+          toggle={() => {}}
+        >
+          <DropdownToggle
+            nav
+            onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
+          >
+            <Gear />
+          </DropdownToggle>
+          <DropdownMenu>
+            {tabs.slice(1).map(({ name, Icon, visible }) => (
+              <DropdownItem key={name} onClick={toggleTabVisibility(name)}>
+                <div className="dropdown-tab-item">
+                  <div>
+                    <Icon /> {name}{" "}
                   </div>
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-        </NavItem>
+                  <div className="form-check form-switch">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      checked={visible}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
       </Nav>
       <TabContent activeTab={activeTab}>
         {visibleTabs.map(({ name }) => (
-          <TabPane tabId={name}>
-            {getTabPane({ tab: name, users, files, chats, lists, searchValue })}
+          <TabPane tabId={name} key={name}>
+            <TabPaneData
+              tab={name}
+              users={users}
+              files={files}
+              chats={chats}
+              lists={lists}
+              searchValue={searchValue}
+              loading={loading}
+            />
           </TabPane>
         ))}
       </TabContent>

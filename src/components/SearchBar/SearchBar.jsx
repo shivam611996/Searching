@@ -11,7 +11,7 @@ const Spinner = () => (
 function SearchBar({ loading, handleUserSearch, searchValue }) {
   return (
     <div className="search-bar-container">
-      {loading ? <Spinner /> : <Search color="#6c757d" />}
+      {searchValue && loading ? <Spinner /> : <Search color="#6c757d" />}
       <Input
         autoFocus
         onChange={handleUserSearch}
